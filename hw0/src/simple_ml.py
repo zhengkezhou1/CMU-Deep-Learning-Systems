@@ -89,9 +89,8 @@ def softmax_loss(Z, y):
     Returns:
         Average softmax loss over the sample.
     """
-    ### BEGIN YOUR CODE
-    pass
-    ### END YOUR CODE
+    Y = Z[np.arange(len(Z)),y]
+    return np.average(np.subtract((np.log(np.sum(np.exp(Z), axis=1))), Y))
 
 
 def softmax_regression_epoch(X, y, theta, lr = 0.1, batch=100):

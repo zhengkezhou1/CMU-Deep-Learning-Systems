@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from simple_ml import read_idx_images,read_idx_labels
+from simple_ml import read_idx_images,read_idx_labels, softmax_loss, parse_mnist
 
 def verification():
     # 加载数据
@@ -20,6 +20,11 @@ def verification():
     plt.tight_layout()
     plt.show()
 
+def verification_softmax_loss():
+    X,y = parse_mnist("data/train-images-idx3-ubyte.gz",
+                      "data/train-labels-idx1-ubyte.gz")
+    print(softmax_loss(X,y))
+    
 # 执行函数
 if __name__ == "__main__":
-    verification()
+    verification_softmax_loss()

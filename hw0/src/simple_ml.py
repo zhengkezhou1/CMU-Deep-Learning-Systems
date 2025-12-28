@@ -1,8 +1,10 @@
+from ast import For
+from re import I
 import struct
 import numpy as np
 import gzip
 try:
-    from simple_ml_ext import *
+    from simple_ml_ext import *  # type: ignore
 except:
     pass
 
@@ -19,9 +21,7 @@ def add(x, y):
     Return:
         Sum of x + y
     """
-    ### BEGIN YOUR CODE
-    pass
-    ### END YOUR CODE
+    return x + y
 
 
 def parse_mnist(image_filename, label_filename):
@@ -47,11 +47,33 @@ def parse_mnist(image_filename, label_filename):
                 labels of the examples.  Values should be of type np.uint8 and
                 for MNIST will contain the values 0-9.
     """
-    ### BEGIN YOUR CODE
-    pass
-    ### END YOUR CODE
+    images = read_idx_images(image_filename)
+    labels = read_idx_labels(label_filename)
+    
+    X = (images / 255.0).astype(np.float32)
+    X = X.reshape(-1, 784)
+    
+    Y = labels.astype(dtype=np.uint8)
+    return (X, Y)
 
+    
+def read_idx_images(image_filename) -> np.ndarray:
+    with gzip.open(image_filename, 'rb') as f:
+        header = f.read(16)
+        _, num_images, rows, cols = struct.unpack(">IIII", header)
+        buffer = f.read()
+        data = np.frombuffer(buffer, dtype=np.uint8).copy()
+        return data.reshape(num_images, rows, cols)
 
+def read_idx_labels(label_filename) -> np.ndarray:
+    with gzip.open(label_filename, 'rb') as f:
+        header = f.read(8)
+        _, num_items = struct.unpack(">II", header)
+        buffer = f.read()
+        data = np.frombuffer(buffer, dtype=np.uint8)
+        return data.reshape(num_items)
+        
+        
 def softmax_loss(Z, y):
     """ Return softmax loss.  Note that for the purposes of this assignment,
     you don't need to worry about "nicely" scaling the numerical properties
